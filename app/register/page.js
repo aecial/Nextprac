@@ -1,14 +1,42 @@
 "use client";
 
+import { redirect } from "next/navigation";
 import { useState } from "react";
 
 const register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [phone, sePhone] = useState("");
+  const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
-  const registerUser = async () => {};
+  const registerUser = async (e) => {
+    e.preventDefault();
+    const userData = {
+      name: name,
+      email: email,
+      password: password,
+      phone: phone,
+      address: address,
+    };
+    try {
+      fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userData }),
+      });
+      console.log("Nice");
+      redirect("/login");
+    } catch (error) {
+      console.log(error);
+    }
+    setAddress("");
+    setEmail("");
+    setName("");
+    setPassword("");
+    setPhone("");
+  };
   return (
     <div className="flex content-height flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -23,12 +51,7 @@ const register = () => {
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form
-          className="space-y-6"
-          action="#"
-          method="POST"
-          onSubmit={registerUser}
-        >
+        <form className="space-y-6" onSubmit={registerUser}>
           <div>
             <label
               htmlFor="Name"
@@ -102,8 +125,10 @@ const register = () => {
               <input
                 id="phoneNumber"
                 name="phoneNumber"
-                type="number"
-                autoComplete="number"
+                type="text"
+                autoComplete="text"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
                 required
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
@@ -122,6 +147,8 @@ const register = () => {
                 name="address"
                 type="text"
                 autoComplete="address"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
                 required
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />

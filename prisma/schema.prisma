@@ -18,6 +18,7 @@ model User {
   name String
   phone_number String @db.VarChar(11)
   address String
+  role Role 
 
 }
 enum Role {
